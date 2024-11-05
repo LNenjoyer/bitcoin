@@ -39,9 +39,9 @@ namespace bitcoin
         {
             double usd = 0;
             InitializeComponent();
+            string json;
             string dzis = DateTime.Now.ToString("yyyy-MM-dd");
             string urlUSD = "https://api.nbp.pl/api/exchangerates/rates/c/usd/" + dzis + "/?format=json";
-            string json;
             using (var webClient = new WebClient())
             {
                 json = webClient.DownloadString(urlUSD);
@@ -57,18 +57,13 @@ namespace bitcoin
             }
             Bitcoin bitcoin = JsonSerializer.Deserialize<Bitcoin>(json);
 
-            string s = (string)bitcoin.bpi.USD.code + ": ";
-            s += ((double)bitcoin.bpi.USD.rate_float).ToString("# ###.####");
-            lblUSD.Text = s;
-            s = (string)bitcoin.bpi.GBP.code + ": ";
-            s += ((double)bitcoin.bpi.GBP.rate_float).ToString("# ###.####");
-            lblGBP.Text = s;
-            s = (string)bitcoin.bpi.EUR.code + ": ";
-            s += ((double)bitcoin.bpi.EUR.rate_float).ToString("# ###.####");
-            lblEUR.Text = s;
-            s = "PLN: ";
-            s += (usd * (double)bitcoin.bpi.USD.rate_float).ToString("# ###.####");
-            lblPLN.Text = s;
+            lblUSD.Text = bitcoin.bpi.USD.code + ": " + bitcoin.bpi.USD.rate_float?.ToString("# ###.####");
+
+            lblGBP.Text = bitcoin.bpi.GBP.code + ": " + bitcoin.bpi.GBP.rate_float?.ToString("# ###.####");
+
+            lblEUR.Text = bitcoin.bpi.EUR.code + ": " + bitcoin.bpi.EUR.rate_float?.ToString("# ###.####");
+
+            lblPLN.Text = "PLN: " + (usd * (double)bitcoin.bpi.USD.rate_float).ToString("# ###.####");
         }
     }
 }
